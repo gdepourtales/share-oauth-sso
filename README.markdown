@@ -29,7 +29,6 @@ and add the following filter-mappings before the "Authentication Filter" mapping
     <filter-name>OAuthAuthenticationFilter</filter-name>
     <url-pattern>/page/*</url-pattern>
 </filter-mapping>
-
 <filter-mapping>
     <filter-name>OAuthAuthenticationFilter</filter-name>
     <url-pattern>/p/*</url-pattern>
@@ -63,7 +62,6 @@ Example of configuration
             <!-- The domains for which incoming user should be restricted to. If blank, any valid email will be accepted -->
             <user-domains>nxc.no</user-domains>
         </repository>
-
         <oauth-api>
             <!-- The key of your API application -->
             <key>562961831703.apps.googleusercontent.com</key>
@@ -76,9 +74,7 @@ Example of configuration
             <!-- This is a constant and my be different in future releases -->
             <name>GoogleApi</name>
         </oauth-api>
-
     </config>
-
 </alfresco-config>
 
 Build notes
