@@ -1,0 +1,56 @@
+<!--
+This file is part of oauth-login-module.
+
+oauth-login-module is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+oauth-login-module is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with oauth-login-module.  If not, see <http://www.gnu.org/licenses/>.
+
+ -->
+
+
+<alfresco-config>
+    <config evaluator="string-compare" condition="OAuthFilter">
+        <repository>
+            <!-- The host of the Alfresco repository webapp -->
+            <host>localhost</host>
+            <!-- The port of the Alfresco repository webapp. Put 80 for standard HTTP-->
+            <port>8080</port>
+            <!-- The protocol to access the Alfresco repository -->
+            <protocol>http</protocol>
+            <!-- The API access URI. If you use standard Alfresco, this should not change -->
+            <api>/alfresco/service/api</api>
+            <!-- The admin user who is able to create new users -->
+            <admin>admin</admin>
+            <!-- The password of the admin user -->
+            <password>admin</password>
+            <!-- The unique password for all users authenticated with OAuth. Choose it very complicated -->
+            <user-password>gotpxdKFjA_uxzG5SdGu</user-password>
+            <!-- The domains for which incoming user should be restricted to. If blank, any valid email will be accepted -->
+            <user-domains>nxc.no</user-domains>
+        </repository>
+
+        <oauth-api>
+            <!-- The key of your API application -->
+            <key>562961831703.apps.googleusercontent.com</key>
+            <!-- The URI from which get the user profile informations -->
+            <uri>https://www.googleapis.com/oauth2/v1/userinfo</uri>
+            <!-- The secret of your API application -->
+            <secret>sgYrMLRbElLNfL4Q7oxVVwby</secret>
+            <!-- The scope(s) for getting data -->
+            <scope>https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email</scope>
+            <!-- This is a constant and my be different in future releases -->
+            <name>GoogleApi</name>
+        </oauth-api>
+
+    </config>
+
+</alfresco-config>
