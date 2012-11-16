@@ -3,18 +3,21 @@ Alfresco Share OAuth SSO Support
 
 The Alfresco OAuth SSO module lets users login in Alfresco Share using their Google Apps account. The module creates
 automatically accounts which do not exist to make Share and Google Apps integrate transparently. Configuration uses
-standard Share Surf configuration files. The jar is packaged with all dependencies so that it can be deployed as a
+standard Share Surf configuration files. The jar is packaged with all dependencies so that it can be deployed as a single jar.
 
 Installation
 ============
 
 I. Create a Google API Access
+
 Go to Google API Console and create your API (https://code.google.com/apis/console)
 
 II. Deploy the library
+
 Copy the oauth-login-module jar in your Share webapp lib folder ([$WEBAPP_FOLDER]/share/WEB-INF/lib).
 
 III. Add the filter to web.xml
+
 Add the following snippet to your Share web.xml before the filter named "Authentication filter"
 
     <filter>
