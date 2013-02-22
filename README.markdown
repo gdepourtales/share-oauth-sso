@@ -80,6 +80,8 @@ Example of configuration
         </config>
     </alfresco-config>
 
+You can bypass the OAuthFilter by providing the bypassOAuth parameter to the share login page (example http://localhost:8081/share/page/?bypassOAuth)
+
 Build notes
 ===========
 The standard package build generates a shaded jar with dependencies included for easier deployment.

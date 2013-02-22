@@ -334,9 +334,6 @@ public class OAuthSSOAuthenticationFilter implements Filter {
      */
     protected String doOAuthAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        if (request.getParameter("bypassOAuth") != null) {
-            return null;
-        }
 
         Token requestToken = (Token) request.getSession().getAttribute(ATTR_OAUTH_REQUEST_TOKEN);
 
@@ -387,6 +384,14 @@ public class OAuthSSOAuthenticationFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+        // Utility parameter to bypass oauth for the session
+        if (request.getParameter("bypassOAuth") != null || request.getSession().getAttribute("share.bypassOAuth") != null) {
+            request.getSession().setAttribute("share.bypassOAuth", true);
+            chain.doFilter(servletRequest, servletResponse);
+            return;
+        }
+
 
         if (AuthenticationUtil.isAuthenticated(request)) {
             // Already authenticated
