@@ -84,6 +84,9 @@ You can bypass the OAuthFilter by providing the bypassOAuth parameter to the sha
 
 Build notes
 ===========
+
+The project depends on a a modified java-scribe package available on github here : https://github.com/gdepourtales/scribe-java
+
 The standard package build generates a shaded jar with dependencies included for easier deployment.
 
 The Maven has a webapp profile which builds an exploded share war. Running the "integration-test" launches the embedded

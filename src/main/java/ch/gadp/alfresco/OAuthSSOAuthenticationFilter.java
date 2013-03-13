@@ -72,6 +72,7 @@ public class OAuthSSOAuthenticationFilter implements Filter {
     private static final String API_SECRET = "oauth-api.secret";
     private static final String API_SCOPE = "oauth-api.scope";
     private static final String API_NAME = "oauth-api.name";
+    private static final String API_PROMPT = "oauth-api.prompt";
 
     private static final String SCRIBE_API_PACKAGE = "org.scribe.builder.api";
 
@@ -135,7 +136,8 @@ public class OAuthSSOAuthenticationFilter implements Filter {
                 .provider(this.getAPIClass(getConfigurationValue(API_NAME)))
                 .apiKey(getConfigurationValue(API_KEY))
                 .apiSecret(getConfigurationValue(API_SECRET))
-                .scope(getConfigurationValue(API_SCOPE));
+                .scope(getConfigurationValue(API_SCOPE))
+                .approvalPrompt(getConfigurationValue(API_PROMPT));
         if (StringUtils.isNotEmpty(callbackURL)) {
             sb.callback(callbackURL);
         }
@@ -147,31 +149,36 @@ public class OAuthSSOAuthenticationFilter implements Filter {
     protected void processNoRequestToken(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         OAuthService oauthService = this.getOAuthService(req.getRequestURL().toString());
 
-
+        /*
         Token requestToken = oauthService.getRequestToken();
         req.getSession().setAttribute(ATTR_OAUTH_REQUEST_TOKEN, requestToken);
-
-        resp.sendRedirect(oauthService.getAuthorizationUrl(requestToken));
+        */
+        resp.sendRedirect(oauthService.getAuthorizationUrl(null));
     }
 
 
-    private GoogleProfileInfo getUserProfile(HttpServletRequest req, HttpServletResponse resp, Token requestToken) throws IOException {
-        OAuthService oauthService = this.getOAuthService(null);
+    private GoogleProfileInfo getUserProfile(HttpServletRequest req, HttpServletResponse resp, String authcode) throws IOException {
+        OAuthService oauthService = this.getOAuthService(req.getRequestURL().toString());
 
+        /*
         String oauthVerifierToken = req.getParameter("oauth_verifier");
 
         if (oauthVerifierToken == null) {
             this.processNoRequestToken(req, resp);
             return null;
         }
+        */
 
         // getting access token
-        Verifier verifier = new Verifier(oauthVerifierToken);
-        Token accessToken = oauthService.getAccessToken(requestToken, verifier);
+        // Verifier verifier = new Verifier(oauthVerifierToken);
+        // Token accessToken = oauthService.getAccessToken(requestToken, verifier);
 
-        OAuthRequest oAuthRequest = new OAuthRequest(Verb.GET, getConfigurationValue(API_URI));
-        oauthService.signRequest(accessToken, oAuthRequest);
-        Response oauthResponse = oAuthRequest.send();
+        Verifier verifier = new Verifier(authcode);
+        Token accessToken = oauthService.getAccessToken(null, verifier);
+
+        OAuthRequest request = new OAuthRequest(Verb.GET, getConfigurationValue(API_URI));
+        oauthService.signRequest(accessToken, request);
+        Response oauthResponse = request.send();
 
         Gson gson = new Gson();
         return gson.fromJson(oauthResponse.getBody(), GoogleProfileInfo.class);
@@ -302,9 +309,9 @@ public class OAuthSSOAuthenticationFilter implements Filter {
      * @throws IOException
      * @throws ServletException
      */
-    protected String processRequestToken(HttpServletRequest request, HttpServletResponse response, Token requestToken) throws IOException, ServletException {
+    protected String processRequestToken(HttpServletRequest request, HttpServletResponse response, String authCode) throws IOException, ServletException {
 
-        GoogleProfileInfo userInfo = this.getUserProfile(request, response, requestToken);
+        GoogleProfileInfo userInfo = this.getUserProfile(request, response, authCode);
         if (userInfo == null) {
             return null;
         }
@@ -335,9 +342,11 @@ public class OAuthSSOAuthenticationFilter implements Filter {
     protected String doOAuthAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
 
-        Token requestToken = (Token) request.getSession().getAttribute(ATTR_OAUTH_REQUEST_TOKEN);
+        String authCode = request.getParameter("code");
 
-        if (requestToken == null) {
+        //Token requestToken = (Token) request.getSession().getAttribute(ATTR_OAUTH_REQUEST_TOKEN);
+
+        if (authCode == null) {
             try {
                 this.processNoRequestToken(request, response);
                 return null;
@@ -346,7 +355,7 @@ public class OAuthSSOAuthenticationFilter implements Filter {
             }
         } else {
             try {
-                return this.processRequestToken(request, response, requestToken);
+                return this.processRequestToken(request, response, authCode);
             } catch (Exception e) {
                 logger.debug("Authentication failed: " + e.getMessage());
             }
