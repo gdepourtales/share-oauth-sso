@@ -82,6 +82,14 @@ Example of configuration
 
 You can bypass the OAuthFilter by providing the bypassOAuth parameter to the share login page (example http://localhost:8081/share/page/?bypassOAuth)
 
+Important Configuration Tips
+============================
+The following must be true:
+
+1. The admin password in the share-config-custom.xml file must match the Alfresco admin password.
+2. The user password in the share-config-custom.xml file must be set as the password for all users authenticating using OAuth. This is true even if you modify the code to not create new users.
+3. The Google username must match the Alfresco username. The code assumes the text to the left of the "@" sign to be the Google username. So if your Google account is "janedoe@gmail.com" then your Alfresco user must have the username property set to "janedoe". If you let the add-on create new users for you, this will be done automatically. If you disable creating new users automatically, this could catch you off-guard.
+
 Build notes
 ===========
 
